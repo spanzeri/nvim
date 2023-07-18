@@ -72,6 +72,26 @@ MTS.nvim_config = function()
 	}
 end
 
+MTS.plugin_files = function()
+	tsbuiltin.find_files {
+		cwd = vim.fn.stdpath("data") .. "/lazy/",
+	}
+end
+
+MTS.lsp_workspace_symbols = function()
+	tsbuiltin.lsp_workspace_symbols {
+		symbol_width = 45,
+		shorten_path = true,
+	}
+end
+
+MTS.lsp_document_symbols = function()
+	tsbuiltin.lsp_document_symbols {
+		symbol_width = 45,
+		shorten_path = true,
+	}
+end
+
 return setmetatable({}, {
 	__index = function(_, k)
 		return MTS[k] or tsbuiltin[k]

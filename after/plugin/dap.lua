@@ -9,21 +9,6 @@ vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "", linehl = "", nu
 vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "", texhl = "Error" })
 
-require("nvim-dap-virtual-text").setup {
-	enabled = true,
-	enabled_commands = false,
-
-	highlilght_changed_variables = true,
-	highlight_new_as_changed = true,
-
-	commented = false,
-
-	show_stop_reason = true,
-
-	virt_text_pos = "eol",
-	all_frames = false,
-}
-
 dap.adapters.nlua = function(callback, config)
 	callback { type = "server", host = config.host, port = config.port }
 end

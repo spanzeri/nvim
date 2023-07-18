@@ -2,7 +2,7 @@
 Keymaps we always want available, with or without plugins
 ]]
 
-local remap_utils = require("sam.remap_utils")
+local remap_utils = require("utils.remap")
 local nmap = remap_utils.nmap
 local xmap = remap_utils.xmap
 local imap = remap_utils.imap
@@ -10,9 +10,6 @@ local imap = remap_utils.imap
 -- Better movement with word-wrap
 nmap { "k", [[v:count == 0 ? "gk" : "k"]], { expr = true, silent = true } }
 nmap { "j", [[v:count == 0 ? "gj" : "j"]], { expr = true, silent = true } }
-
--- Ensure jumping to the end of the page leaves some space under the cursor
-nmap { "G", [[G8<C-e>]] }
 
 -- Ctrl+Backspace and Ctrl+Del in insert mode
 imap { "<C-del>", "<C-o>dw" }
@@ -43,3 +40,28 @@ nmap { "gl", "<cmd>diffget //3<CR>", { silent = true, desc = "diff[g]et left [l]
 
 -- Quickly execute lua stuff
 nmap { "<leader>xx", "<cmd>w | so %<CR>", { desc = "save and source current lua file" } }
+
+
+local builtin = require("utils.telescope_custom")
+
+nmap { "<leader>/", builtin.current_buffer_fuzzy_find, desc = "fuzzy search current buffer [/]" }
+nmap { "<leader>sx", builtin.builtin, desc = "[s]earch telescope builtns" }
+nmap { "<leader>sh", builtin.help_tags, desc = "[s]earch [h]elp" }
+nmap { "<leader>sf", builtin.find_files, desc = "[s]earch [f]iles" }
+nmap { "<leader>so", builtin.oldfiles, desc = "[s]earch [o]ld files" }
+nmap { "<leader>sb", builtin.buffers, desc = "[s]earch [b]uffers" }
+nmap { "<leader>sn", builtin.nvim_config, desc = "[s]earch [n]vim config files" }
+nmap { "<leader>sw", builtin.grep_string, desc = "[s]earch current [w]ord" }
+nmap { "<leader>sg", builtin.live_grep, desc = "[s]earch by [g]rep" }
+nmap { "<leader>sd", builtin.diagnostics, desc = "[s]earch [d]iagnostics" }
+nmap { "<leader>sj", builtin.jumplist, desc = "[s]earch [j]umplist" }
+nmap { "<leader>sk", builtin.keymaps, desc = "[s]earch [k]eymaps" }
+nmap { "<leader>sr", builtin.registers, desc = "[s]earch [r]egisters" }
+nmap { "<leader>se", builtin.quickfix, desc = "[s]earch [e]rrors" }
+nmap { "<leader>sp", builtin.plugin_files, desc = "[s]earch [p]lugins" }
+nmap { "<leader>st", [[:TodoTelescope]], desc = "[s]earch [t]odos"}
+
+-- git
+nmap { "<leader>sgf", builtin.git_files, desc = "[s]earch [g]it [f]iles" }
+nmap { "<leader>sgb", builtin.git_branches, desc = "[s]earch [g]it [b]ranches" }
+nmap { "<leader>sgc", builtin.git_commits, desc = "[s]earch [g]it [c]ommits" }

@@ -58,4 +58,37 @@ require("lazy").setup("plugins", {
 			task = "📌",
 		},
 	},
+	defaults = {
+		lazy = true,
+	},
 })
+
+-- local mem_test_table = {
+-- 	"arr_el_1",
+-- 	"arr_el_2",
+-- 	[10] = "number, but not array",
+-- 	{
+-- 		"table in array"
+-- 	},
+-- 	key = "value",
+-- 	another_key = {
+-- 		"subtable indexed by key",
+-- 		subkey = 42,
+-- 		a_key = "a_string",
+-- 	},
+-- }
+--
+-- local perm = require("sam.perm")
+-- perm.setup()
+-- --perm = vim.tbl_extend("force", perm, mem_test_table)
+-- print(vim.inspect(perm))
+-- vim.api.nvim_create_user_command("SavePerm", function()
+-- 	print(vim.inspect(perm))
+-- 	perm:save()
+-- end, {})
+--
+
+
+
+
+

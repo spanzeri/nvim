@@ -25,20 +25,9 @@ opt.autoindent = true
 opt.cindent = true
 opt.wrap = true
 
--- Formatting options
-opt.formatoptions = opt.formatoptions
-	- "a" -- no autoformatting of paragraphs
-	- "t" -- don't autowrap text
-	+ "c" -- do autowrap comments
-	+ "q" -- allow formatting of comments with gq
-	- "o" -- o and O don't automatically add comments
-	+ "r" -- enter does add comments
-	+ "n" -- format lists
-	+ "j" -- when possible, auto-remove comments
-	- "2" -- this should not even be a thin	+ "n" -- format lists
-	+ "j" -- when possible, auto-remove comments
-	- "2" -- this should not even be a thing
-
+-- Formatting options: in normal mode, o and O do not add comments
+opt.formatoptions = "jcrql"
+vim.bo.formatoptions = "jcrql"
 
 -- Pseudo-trasparent completion popup for command line 
 opt.pumblend = 10
@@ -80,6 +69,13 @@ opt.termguicolors = true
 opt.background = "dark"
 opt.colorcolumn = "81,121"
 
+-- Show significant whitespaces
+opt.listchars = {
+	tab   = " ――",
+	trail = "~",
+	lead  = ".",
+}
+
 -- Cursorline highlighting
 -- Only on the active buffer, not at all in certain filetypes like telescope
 opt.cursorline = true
@@ -96,3 +92,15 @@ end
 set_cursorline("WinLeave", false) -- disable on leave
 set_cursorline("WinEnter", true) -- enable on enter
 set_cursorline("FileType", false, "TelescopePrompt") -- always disabled filetypes
+
+-- Use powershell on windows
+
+if vim.fn.has('win32') == 1 then
+	vim.o.shell = 'powershell'
+	vim.o.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+	vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+	vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+	vim.o.shellquote = ''
+	vim.o.shellxquote = ''
+end
+
