@@ -101,4 +101,11 @@ return {
 		event = "VeryLazy",
 		opts = {},
 	},
+
+	-- Tasks
+	{
+		"stevearc/overseer.nvim",
+		event = "VeryLazy",
+		config = true,
+	},
 }

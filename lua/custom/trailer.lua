@@ -21,6 +21,7 @@ M.setup = function(config)
 	config = H.make_config(config or {})
 	H.create_autocommands()
 	H.create_hl()
+	H.create_commands()
 
 	vim.defer_fn(M.enable_hl, 0)
 end
@@ -31,6 +32,26 @@ M.default_config = {
 	trim_on_write = false,
 	empty_lines_eof = 1,
 }
+
+local make_eof_whiteline_patterns = function(skipnr)
+	local prefix = [[\v]]                             -- activate magic so the rest of the pattern is more readable
+
+	local whitelines = [[(^\s*\n)]]
+	local body = nil
+
+	if skipnr <= 0 then
+		body = whitelines .. [[+]]                    -- match as many whitelines as possible
+	else
+		body =
+			whitelines ..
+			[[{]] .. tostring(skipnr) .. [[}\zs]] ..  -- zero width (\zs) the first {n} whitelines
+			whitelines .. [[*]]                       -- and match the rest
+	end
+
+	local postfix = [[%$\n]]                            -- match if followed by the end of file
+
+	return prefix .. body .. postfix
+end
 
 M.enable_hl = function()
 	if not H.is_enabled() or vim.fn.mode() ~= "n" then
@@ -47,14 +68,7 @@ M.enable_hl = function()
 	end
 
 	vim.fn.matchadd("Trailer", [[\s\+$]])
-	if M.config.empty_lines_eof == 0 then
-		vim.fn.matchadd("Trailer", [[\v(^\s*\n$)\+%$\n]])
-	else
-		vim.fn.matchadd("Trailer",
-			[[\v(^\s*\n$){]] .. tostring(M.config.empty_lines_eof) .. [[}\zs(^\s*\n$)+%$\n]])
-	end
-
-	-- \v(^\s*\n){2,}\ze^\s*\S   <- match empty lines inside file (not end)
+	vim.fn.matchadd("Trailer", make_eof_whiteline_patterns(M.config.empty_lines_eof))
 end
 
 M.disable_hl = function()
@@ -68,6 +82,24 @@ M.disable_hl = function()
 end
 
 M.config = nil
+
+M.trim_whitespaces = function()
+	local curpos = vim.api.nvim_win_get_cursor(0)
+	vim.cmd([[keeppatterns %s/\s\+$//ge]])
+	vim.api.nvim_win_set_cursor(0, curpos)
+end
+
+M.trim_endlines = function()
+	local curpos = vim.api.nvim_win_get_cursor(0)
+	print([[%s/]] .. make_eof_whiteline_patterns(M.config.empty_lines_eof) .. [[//ge]])
+	vim.cmd([[%s/]] .. make_eof_whiteline_patterns(M.config.empty_lines_eof) .. [[//ge]])
+	vim.api.nvim_win_set_cursor(0, curpos)
+end
+
+M.trim = function()
+	M.trim_whitespaces()
+	M.trim_endlines()
+end
 
 -- Helper utils
 
@@ -86,9 +118,6 @@ H.make_config = function(config)
 	return config
 end
 
-H.whitespace_pattern = [[\s\+$]]
-H.eof_lines_pattern = [[\(^\s*\n$\)*\%$]]
-
 H.create_autocommands = function()
 	local augroup = vim.api.nvim_create_augroup("Trailer", { clear = true })
 	local au = function(event, pattern, callback, desc)
@@ -103,6 +132,17 @@ H.create_hl = function()
 	vim.api.nvim_set_hl(0, "Trailer", { default = true, link = "CurSearch" })
 end
 
+H.create_commands = function()
+	vim.api.nvim_create_user_command("TrailerTrim", M.trim, {
+		desc = "Trailer: delete trailing whitespaces and empty lines",
+	})
+	vim.api.nvim_create_user_command("TrailerTrimWhitespaces", M.trim_whitespaces, {
+		desc = "Trailer: trim trailing whitespaces",
+	})
+	vim.api.nvim_create_user_command("TrailerTrimEndlines", M.trim_endlines, {
+		desc = "Trailer: trim empty lines at the end of the file"
+	})
+end
 
 H.is_enabled = function()
 	return not (vim.g.trailer_disable or vim.b.trailer_disable)
@@ -119,4 +159,11 @@ H.get_match_id = function()
 end
 
 return M
+
+
+
+
+
+
+
 

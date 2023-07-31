@@ -1,1 +1,1 @@
-require("custom.trailers").setup()
+require("custom.trailer").setup()

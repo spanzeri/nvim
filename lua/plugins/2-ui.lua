@@ -5,26 +5,12 @@ Improve or add to the UI
 return {
 	-- Colorscheme
 	{
-		"catppuccin/nvim",
+		"AlexvZyl/nordic.nvim",
 		lazy = false,
 		priority = 1000,
-		name = "catppuccin",
-		opts = {
-			styles = {
-				comments = {},
-				conditionals = {},
-			},
-			background = {
-				dark = "macchiato",
-				light = "latte",
-			},
-			dim_inactive = {
-				enabled = true,
-			}
-		},
+		opts = {},
 		config = function(plugin, opts)
-			require(plugin.name).setup(opts)
-			vim.cmd.colorscheme(plugin.name)
+			vim.cmd.colorscheme("nordic")
 		end
 	},
 
@@ -119,19 +105,22 @@ return {
 		},
 	},
 
+	{
+		"nvim-telescope/telescope-fzf-native.nvim",
+		enabled = vim.fn.executable "cmake" == 1,
+		build = {
+			"cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release",
+			"cmake --build build --config Release",
+			"cmake --install build --prefix build"
+		},
+		lazy = false,
+	},
+
 	-- Telescope (fuzzy searching everything)
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				enabled = vim.fn.executable "cmake" == 1,
-				build = {
-					"cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release",
-					"cmake --build build --config Release",
-					"cmake --install build --prefix build"
-				},
-			},
+			"nvim-telescope/telescope-fzf-native.nvim",
 		},
 		cmd = "Telescope",
 		opts = {
@@ -151,10 +140,7 @@ return {
 		config = function(_, opts)
 			local telescope = require("telescope")
 			telescope.setup(opts)
-			local lh = require("utils.lazy")
-			if lh.has_plugin("telescope-fzf-native.nvim") then
-				telescope.load_extension("fzf")
-			end
+			telescope.load_extension("fzf")
 		end,
 	},
 

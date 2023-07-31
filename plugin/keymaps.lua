@@ -62,6 +62,6 @@ nmap { "<leader>sp", builtin.plugin_files, desc = "[s]earch [p]lugins" }
 nmap { "<leader>st", [[:TodoTelescope]], desc = "[s]earch [t]odos"}
 
 -- git
-nmap { "<leader>sgf", builtin.git_files, desc = "[s]earch [g]it [f]iles" }
-nmap { "<leader>sgb", builtin.git_branches, desc = "[s]earch [g]it [b]ranches" }
-nmap { "<leader>sgc", builtin.git_commits, desc = "[s]earch [g]it [c]ommits" }
+nmap { "<leader>sgf", builtin.git_files, desc = "[s]earch [G]it [f]iles" }
+nmap { "<leader>sGb", builtin.git_branches, desc = "[s]earch [G]it [b]ranches" }
+nmap { "<leader>sGc", builtin.git_commits, desc = "[s]earch [G]it [c]ommits" }
