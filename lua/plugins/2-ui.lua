@@ -8,8 +8,11 @@ return {
 		"AlexvZyl/nordic.nvim",
 		lazy = false,
 		priority = 1000,
-		opts = {},
+		opts = {
+			italic_comments = false,
+		},
 		config = function(plugin, opts)
+			require("nordic").setup(opts)
 			vim.cmd.colorscheme("nordic")
 		end
 	},
